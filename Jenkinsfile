@@ -1,19 +1,18 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build and Push Docker Image') {
+        stage('Build and Push') {
             steps {
-                // Grant executable permissions to the build script
-                sh 'chmod +x deploy.sh'
-
-                // Build the Docker image using the build script
-                sh './deploy.sh'
-                
-
-                
+                script {
+                    sh 'chmod +x build.sh'
+                    sh './build.sh'
+                    sh 'docker login -u deepanr -p R@jasekar01'
+                    sh 'docker build -t deepanr/dev .'
+                    sh 'docker push deepanr/dev'
+                    sh 'chmod +x deploy.sh'
+                    sh './deploy.sh'
+                }
             }
-        }
-
-    }
+        }  
+    }
 }
